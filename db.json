@@ -1,0 +1,34 @@
+{
+    "persons": [
+      {
+        "name": "Arto Hellas",
+        "number": "045-31235234",
+        "id": 1
+      },
+      {
+        "name": "Ada Lovelace",
+        "number": "39-44-5323523",
+        "id": 2
+      },
+      {
+        "name": "Dan Abramov",
+        "number": "12-43-234345",
+        "id": 3
+      },
+      {
+        "name": "Mary Poppendieck",
+        "number": "39-23-6423122",
+        "id": 4
+      },
+      {
+        "name": "Rhyan LeShawn",
+        "number": "+1 408-616-8483",
+        "id": 5
+      },
+      {
+        "name": "Immanuel Toby",
+        "number": "0808 782 3890",
+        "id": 6
+      }
+    ]
+  }
