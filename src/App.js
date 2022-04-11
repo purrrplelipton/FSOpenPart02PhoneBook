@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React, { useState, useEffect } from "react"
 
-import Person from "./components/Person/Person";
+import Content from "./components/Content/Content";
 import Filter from "./components/Filter/Filter";
 import Notification from "./components/Notification/Notification"
 import Form from "./components/Form/Form";
@@ -17,8 +17,8 @@ const App = () => {
   useEffect(() => {
     personsService
     .getAll()
-    .then(initialPersons => {setItems({...items, persons: initialPersons})})
-  }, [items])
+    .then(persons => {setItems({...items, persons: persons})})
+  }, [items, items.persons, items.formInfo, items.query, items.errorMessage])
 
   const submitHandler = (event) => {
     event.preventDefault()
@@ -67,7 +67,7 @@ const App = () => {
     }
   }
 
-  const deletePerson = id => {
+  const deletePersonHandler = ( id ) => {
     const person = items.persons.find(person => person.id === id)
     const confirmDelete = window.confirm(`Delete ${person.name} ?`)
     if(confirmDelete) {
@@ -93,16 +93,13 @@ const App = () => {
 
   const filterHandler = ( event ) => {
     setItems( { ...items, query: event.target.value } );
-    setItems( {
-      ...items,
-      persons: items.persons.filter( ( person ) => {
-        return person.name.toLowerCase().includes(items.query.toLowerCase())
-      } )
-    } )
+    const regex = new RegExp( items.query.toLowerCase(), "i" );
+    const filteredPersons = () => items.persons.filter( person => person.name.toLowerCase().match(regex) )
+    setItems( { ...items,persons: filteredPersons } );
   }
 
   return (
-    <center>
+    <div>
       <h1>Phonebook</h1>
       <Notification message={items.errorMessage}/>
       <Filter value={items.query} changed={filterHandler} />
@@ -124,13 +121,9 @@ const App = () => {
       />
       <h1>numbers</h1>
       <div>
-        {
-          items.persons.map(
-            ( person, index ) => <Person key={index} person={person} clicked={deletePerson} />
-          )
-        }
+        <Content persons={items.persons} clicked={deletePersonHandler} />
       </div>
-    </center>
+    </div>
   )
 }
 
