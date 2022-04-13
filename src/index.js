@@ -7,7 +7,7 @@ import "./index.css";
 import axios from "axios";
 
 axios.get(
-  "http://localhost:3000/persons"
+  "http://localhost:4000/persons"
 ).then(res => {
   const persons = res.data;
   ReactDOM.createRoot(

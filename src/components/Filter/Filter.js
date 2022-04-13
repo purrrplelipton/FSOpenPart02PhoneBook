@@ -1,11 +1,21 @@
 import React from "react";
 
-const Filter = ( props ) => {
-    return (
-        <div>
-            <input placeholder="filter by..." value={props.value} onChange={props.changed} />
-        </div>
-    );
-}
+import Person from "../Person/Person";
+
+const Filter = ({query, persons, clicked}) => {
+    const regex = new RegExp(query, "i");
+
+    return persons.filter(person => 
+        person.name.match(regex)
+        ).map(person => (
+            <div key={person.id}>
+                <Person
+                    person={person}
+                    clicked={clicked}
+                />
+            </div>
+        )
+    )
+};
 
 export default Filter;

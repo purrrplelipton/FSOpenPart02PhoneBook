@@ -1,9 +1,10 @@
 import React from "react";
 
-const Person = ( props ) =>  (
-  <p key={props.index}>
-    {props.person.name} {props.person.number} <button onClick={() => props.clicked(props.person.id)}>delete</button>
-  </p>
+const Person = ({person, clicked}) => (
+    <div className="person">
+        <p>{person.name} {person.number} </p>
+        <button onClick={() => clicked(person.id)}>delete</button>
+    </div>
 );
-   
+
 export default Person;

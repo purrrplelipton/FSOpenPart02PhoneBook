@@ -1,3 +1,18 @@
 body {
     font-family: SF Pro Text;
 }
+
+.person > p {
+    display: inline-block;
+    margin: 10px 20px;
+}
+
+.error {
+color: red;
+background: lightgrey;
+font-size: 20px;
+border-style: solid;
+border-radius: 5px;
+padding: 10px;
+margin-bottom: 10px;
+}

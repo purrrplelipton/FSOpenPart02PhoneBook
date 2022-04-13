@@ -1,11 +1,20 @@
 import React from "react";
 
-const Form = ( props ) => {
+const Form = ({clicked, name, nameChange, number, numChange}) => {
+
     return (
-        <form onSubmit={props.submitHandler}>
-            <input placeholder="name" value={props.name} onChange={props.nameChangeHandler} />
+        <form onSubmit={clicked}>
+            <input
+                placeholder="name"
+                value={name}
+                onChange={nameChange}
+            />
             <br /><br />
-            <input placeholder="number" value={props.number} onChange={props.numberChangeHandler} />
+            <input
+                placeholder="number"
+                value={number}
+                onChange={numChange}
+            />
             <br /><br />
             <button type="submit">add</button>
         </form>
