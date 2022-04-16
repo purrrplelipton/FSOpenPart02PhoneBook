@@ -30,6 +30,48 @@ const App = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    
+    let nameArr = items.formInfo.name.replace(/[\W_]/g, "").split(""),
+        letterCount = 0,
+        numberCount = 0;
+    nameArr.forEach(char => isNaN(char) ? letterCount+=1 : numberCount+=1);
+
+    // console.log("letterCount", letterCount, "numberCount", numberCount)
+
+    if (numberCount > letterCount) {
+      setItems(prevState => ({
+        ...prevState,
+        errorMessage: `[error]: Name doesn't meet the criteria to be valid`
+      }))
+      return (
+        setTimeout(() => {
+          setItems(prevState => ({
+            ...prevState,
+            errorMessage: null
+          }))
+        }, 5000)
+      );
+    }
+
+    // console.log(items.formInfo.number.replace(/[\W_]/g, "").match(/^\d/));
+    
+    if (
+      items.formInfo.number.replace(/[\W_]/g, "").split("").length < 10 ||
+      !items.formInfo.number.replace(/[\W_]/g, "").match(/^\d/)
+    ) {
+      setItems(prevState => ({
+        ...prevState,
+        errorMessage: `[error]: Number doesn't meet the criteria to be valid`
+      }))
+      return (
+        setTimeout(() => {
+          setItems(prevState => ({
+            ...prevState,
+            errorMessage: null
+          }))
+        }, 5000)
+      );
+    };
 
     const regex = new RegExp(items.formInfo.name, "i");
 
@@ -44,38 +86,47 @@ const App = () => {
         personsService
           .update(id, newPerson)
           .then(returnedPerson => {
-            setItems((prevState, props) => {
-              return ({
-                ...prevState,
-                persons: prevState.persons.map(p => p.id !== id ? p : returnedPerson),
-                errorMessage: `${prevState.formInfo.name}'s number has been changed`
-              });
-            })
-            setTimeout(() => 
-              setItems((prevState, props) => {
-                return {...prevState, errorMessage: null};
-              }), 5000
+            setItems((prevState, props) => ({
+              ...prevState,
+              persons: prevState.persons.map(p => p.id !== id ? p : returnedPerson),
+              errorMessage: `${prevState.formInfo.name}'s number has been changed`
+            }))
+            setTimeout(() => setItems(
+              (prevState, props) => ({
+                ...prevState, errorMessage: null
+              })), 5000
             )
           })
           .catch(error => {
-            setItems((prevState, props) => {
-              return ({
+            setItems((prevState, props) => ({
+              ...prevState,
+              errorMessage: `[error]: ${prevState.formInfo.name} has already been removed from server`,
+              persons: prevState.persons.filter(p => p.id !== id),
+              formInfo: { ...prevState.formInfo, name: "", number: "" }
+            }))
+            setTimeout(() => {
+              setItems((prevState, props) => ({
                 ...prevState,
-                errorMessage: `${prevState.formInfo.name} has already been removed from server`,
-                persons: prevState.persons.filter(p => p.id !== id)
-              });
-            })
+                errorMessage: null
+              }));
+            }, 5000);
           });
       } else {
-        Promise.resolve(false)
-        return alert(
-          `User has declined replacing ${items.formInfo.name}'s number`
-        );
+        setItems(prevState => ({
+          ...prevState,
+          errorMessage: `[error]: User has declined replacing ${items.formInfo.name}'s number`
+        }))
+        setTimeout(() => {
+          return (setItems(prevState => ({
+            ...prevState,
+            errorMessage: null
+          })));
+        }, 5000)
       }
     } else {
       const personObject = {
         name: items.formInfo.name,
-        number: items.formInfo.number || "invalid/empty number",
+        number: items.formInfo.number,
         id: items.persons.length + 1
       }
 
@@ -95,7 +146,31 @@ const App = () => {
             }), 5000
           )
         })
+        .catch(error => {
+          const status = error.response.status,
+                statusText = error.response.statusText;
+          setItems(prevState => ({
+            ...prevState,
+            errorMessage: `[error]: ${status} (${statusText})`
+          }))
+          // console.log(error.response.statusText);
+          return (
+            setTimeout(() => {
+              setItems(prevState => ({
+                ...prevState,
+                errorMessage: null
+              }))
+            }, 5000)
+          );
+        })
     }
+    // return (
+    //   setItems(prevState => ({
+    //     ...prevState,
+    //     errorMessage: `[error]: something went wrong`
+    //   }))
+      
+    // );
   }
 
   const deletePersonHandler = ( id ) => {
@@ -119,18 +194,25 @@ const App = () => {
             });
           }
         })
-      setTimeout(() => 
-        setItems((prevState, props) => {
-          return ({
-            ...prevState,
-            errorMessage: null
-          });
-        }), 5000
+      setTimeout(() => setItems(
+        (prevState, props) => ({
+          ...prevState,
+          errorMessage: null
+        })), 5000
       )
     } else {
+      setItems(prevState => ({
+        ...prevState,
+        errorMessage: `[error]:User has declined to delete ${person.name}'s number`
+      }))
       return (
-        alert(`User has declined to delete ${person.name}'s contact details`)
-      )
+        setTimeout(() => {
+          setItems(prevState => ({
+            ...prevState,
+            errorMessage: null
+          }))
+        }, 5000)
+      );
     }
     
   }

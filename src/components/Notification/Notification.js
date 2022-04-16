@@ -1,6 +1,6 @@
 import React from "react";
 
-/* const successStyle = {
+const successStyle = {
   backgroundColor: 'lightgrey',
   color: 'green',
   fontSize: 20,
@@ -18,12 +18,18 @@ const errorStyle = {
   borderRadius: 5,
   padding: 10,
   marginBottom: 10
-} */
+}
   
-const Notification = ( props ) => {
-    return props.message === null ?
+const Notification = ({message}) => {
+    return message === null ?
     null :
-    <div className="error">{props.message}</div>;
+    message.includes("error") ?
+    <div style={errorStyle} className="error">
+      {message}
+    </div> :
+    <div style={successStyle} className="error">
+      {message}
+    </div>
 }
 
 export default Notification;
